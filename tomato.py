@@ -23,34 +23,50 @@ options.add_argument('--disable-logging')
 
 print("Starting Chrome")
 browser = webdriver.Chrome(executable_path=os.environ["CHROMEDRIVER_LOCATION"], chrome_options=options)
-browser.get(os.environ["ARCADE_HOMEPAGE"])
-sleep(1) # wait for page to load
+browser.get("https://www.tempmailaddress.com/")
 
-# Scroll to and make <input> element visible
-form_element = browser.find_element_by_name("footerEmailForm")
-form_input_element = browser.find_element_by_name("footerInputEmai1")
-browser.execute_script("arguments[0].scrollIntoView();", form_input_element)
+temp_email = browser.find_element_by_id("email").text
+print("temp email: "+temp_email)
 
-# ready to subscribe, but first we need a new email
-# to create a new email, we need to make a new tab:
-# https://python-forum.io/Thread-Need-Help-Opening-A-New-Tab-in-Selenium
-
-# Open a new window
-# This does not change focus to the new window for the driver.
 browser.execute_script("window.open('');")
-sleep(3)
-# Switch to the new window
+browser.implicitly_wait(2)
 browser.switch_to.window(browser.window_handles[1])
-browser.get("http://stackoverflow.com")
-sleep(3)
-# close the active tab
-browser.close()
-sleep(3)
-# Switch back to the first tab
-browser.switch_to.window(browser.window_handles[0])
-sleep(3)
-# Close the only tab, will also close the browser.
+browser.get(os.environ["ARCADE_HOMEPAGE"]) # opens other tab to arcade homepage
+browser.implicitly_wait(5)
 
+form_element = browser.find_element_by_name("footerEmailForm")
+form_input_element = browser.find_element_by_name("footerInputEmai1") 
+form_submit_button = browser.find_element_by_css_selector("form[name=\"footerEmailForm\"] input[type=\"submit\"]")
+browser.execute_script("arguments[0].scrollIntoView();", form_input_element)
+form_input_element.send_keys(temp_email)
+form_submit_button.click()
+sleep(5)
+
+
+# # Scroll to and make <input> element visible
+# form_element = browser.find_element_by_name("footerEmailForm")
+# form_input_element = browser.find_element_by_name("footerInputEmai1")
+# browser.execute_script("arguments[0].scrollIntoView();", form_input_element)
+
+# # ready to subscribe, but first we need a new email
+# # to create a new email, we need to make a new tab:
+# # https://python-forum.io/Thread-Need-Help-Opening-A-New-Tab-in-Selenium
+
+# # Open a new window
+# # This does not change focus to the new window for the driver.
+# browser.execute_script("window.open('');")
+# sleep(0.5)
+# # Switch to the new window
+# browser.switch_to.window(browser.window_handles[1])
+# browser.get("https://www.tempmailaddress.com/")
+# sleep(3)
+# # close the active tab
+# browser.close()
+# sleep(3)
+# # Switch back to the first tab
+# browser.switch_to.window(browser.window_handles[0])
+# sleep(3)
+# # Close the only tab, will also close the browser.
 
 browser.close()
 
