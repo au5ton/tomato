@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 from dotenv import load_dotenv, find_dotenv
 load_dotenv(find_dotenv())
-import argparse
+import requests
 import os
 import os.path
 import re
@@ -68,36 +68,28 @@ browser.implicitly_wait(5)
 iframe2 = browser.find_element_by_css_selector('iframe#MarketingMicrositeIfr')
 browser.switch_to_frame(iframe2)
 browser.find_element_by_css_selector("button[name='ME_TabbedScreenFlow7_pyWorkPage_15']").click()
-browser.implicitly_wait(5)
+sleep(5)
 browser.find_element_by_css_selector("button[name='ME_TabbedScreenFlow7_pyWorkPage_16']").click()
 sleep(5)
 browser.close()
+browser.switch_to.window(browser.window_handles[0])
+sleep(5)
 
+# back to email to claim QR code
+print(browser.current_url)
+browser.switch_to_default_content()
+sleep(1)
+browser.find_element_by_css_selector("span.glyphicon-share-alt").click()
+browser.implicitly_wait(5)
+browser.find_element_by_css_selector("#schranka tr[data-href='3'].hidden-xs").click() # opens 3rd email received, gift receipt
+browser.implicitly_wait(5)
 
-# # Scroll to and make <input> element visible
-# form_element = browser.find_element_by_name("footerEmailForm")
-# form_input_element = browser.find_element_by_name("footerInputEmai1")
-# browser.execute_script("arguments[0].scrollIntoView();", form_input_element)
-
-# # ready to subscribe, but first we need a new email
-# # to create a new email, we need to make a new tab:
-# # https://python-forum.io/Thread-Need-Help-Opening-A-New-Tab-in-Selenium
-
-# # Open a new window
-# # This does not change focus to the new window for the driver.
-# browser.execute_script("window.open('');")
-# sleep(0.5)
-# # Switch to the new window
-# browser.switch_to.window(browser.window_handles[1])
-# browser.get("https://www.tempmailaddress.com/")
-# sleep(3)
-# # close the active tab
-# browser.close()
-# sleep(3)
-# # Switch back to the first tab
-# browser.switch_to.window(browser.window_handles[0])
-# sleep(3)
-# # Close the only tab, will also close the browser.
-
+# open individual email
+iframe3 = browser.find_element_by_id('iframeMail')
+browser.switch_to_frame(iframe3)
+qr_code = browser.find_element_by_css_selector("img.cursordefault").get_attribute("src")
+print(qr_code)
+r = requests.get(qr_code, allow_redirects=True)
+open(os.path.basename(qr_code), 'wb').write(r.content)
+browser.switch_to_default_content()
 browser.close()
-
