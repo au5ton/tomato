@@ -33,33 +33,23 @@ browser.execute_script("arguments[0].scrollIntoView();", form_input_element)
 
 # ready to subscribe, but first we need a new email
 # to create a new email, we need to make a new tab:
-# https://gist.github.com/lrhache/7686903
+# https://python-forum.io/Thread-Need-Help-Opening-A-New-Tab-in-Selenium
 
-# create clickable link to where we want to go
-browser.execute_script("var link = document.createElement(\'a\'); link.href = \'https://www.tempmailaddress.com\'; link.innerText = \'tomato\'; link.id = \'tomato_link\'; document.body.appendChild(link);")
-first_link = browser.find_element_by_id('tomato_link')
-
-# Save the window opener (current window, do not mistaken with tab... not the same)
-main_window = browser.current_window_handle
-first_link.send_keys(Keys.CONTROL + Keys.RETURN)
-
-# Switch tab to the new tab, which we will assume is the next one on the right
-browser.find_element_by_tag_name('body').send_keys((Keys.COMMAND if IS_MACOS else Keys.CONTROL) + Keys.TAB)
-    
-# Put focus on current window which will, in fact, put focus on the current visible tab
-browser.switch_to_window(main_window)
-
-# do whatever you have to do on this page, we will just got to sleep for now
-sleep(2)
-
-# Close current tab
-browser.find_element_by_tag_name('body').send_keys((Keys.COMMAND if IS_MACOS else Keys.CONTROL) + 'w')
-
-# Put focus on current window which will be the window opener
-browser.switch_to_window(main_window)
-
-form_input_element.send_keys("some text")
+# Open a new window
+# This does not change focus to the new window for the driver.
+browser.execute_script("window.open('');")
 sleep(3)
+# Switch to the new window
+browser.switch_to.window(browser.window_handles[1])
+browser.get("http://stackoverflow.com")
+sleep(3)
+# close the active tab
+browser.close()
+sleep(3)
+# Switch back to the first tab
+browser.switch_to.window(browser.window_handles[0])
+sleep(3)
+# Close the only tab, will also close the browser.
 
 
 browser.close()
