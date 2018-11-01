@@ -9,3 +9,6 @@ This project generates QR codes for usage at a specific arcade. This project use
 ## Usage
 - Start [`chromedriver`](https://sites.google.com/a/chromium.org/chromedriver/)
 - Run `./tomato.py`
+
+## Naming
+The name is a [Cowboy Bebop reference](http://cowboybebop.wikia.com/wiki/Edward).
