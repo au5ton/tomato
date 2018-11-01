@@ -28,12 +28,14 @@ browser.get("https://www.tempmailaddress.com/")
 temp_email = browser.find_element_by_id("email").text
 print("temp email: "+temp_email)
 
+# opens and loads new arcade homepage
 browser.execute_script("window.open('');")
 browser.implicitly_wait(2)
 browser.switch_to.window(browser.window_handles[1])
-browser.get(os.environ["ARCADE_HOMEPAGE"]) # opens other tab to arcade homepage
+browser.get(os.environ["ARCADE_HOMEPAGE"])
 browser.implicitly_wait(5)
 
+# subscribes user on arcade homepage
 form_element = browser.find_element_by_name("footerEmailForm")
 form_input_element = browser.find_element_by_name("footerInputEmai1") 
 form_submit_button = browser.find_element_by_css_selector("form[name=\"footerEmailForm\"] input[type=\"submit\"]")
@@ -41,6 +43,35 @@ browser.execute_script("arguments[0].scrollIntoView();", form_input_element)
 form_input_element.send_keys(temp_email)
 form_submit_button.click()
 sleep(5)
+browser.close()
+
+# back to tempmailaddress.com, previous tab
+browser.switch_to.window(browser.window_handles[0])
+browser.implicitly_wait(5)
+browser.find_element_by_css_selector("a[href='#refresh']:not(.btn)").click()
+sleep(2)
+browser.find_element_by_css_selector("#schranka tr[data-href='2'].hidden-xs").click() # opens 2nd email received, subscription confirmation
+browser.implicitly_wait(5)
+
+# open individual email
+iframe = browser.find_element_by_id('iframeMail')
+browser.switch_to_frame(iframe)
+browser.find_element_by_css_selector("a.mktbutton").click() # opens subscription signup
+browser.implicitly_wait(5)
+sleep(5)
+
+# interact with signup form
+browser.switch_to.window(browser.window_handles[1]) # switches to 2nd tab
+print(browser.current_url)
+browser.execute_script(open("./MEFormFiller.user.js").read())
+browser.implicitly_wait(5)
+iframe2 = browser.find_element_by_css_selector('iframe#MarketingMicrositeIfr')
+browser.switch_to_frame(iframe2)
+browser.find_element_by_css_selector("button[name='ME_TabbedScreenFlow7_pyWorkPage_15']").click()
+browser.implicitly_wait(5)
+browser.find_element_by_css_selector("button[name='ME_TabbedScreenFlow7_pyWorkPage_16']").click()
+sleep(5)
+browser.close()
 
 
 # # Scroll to and make <input> element visible
