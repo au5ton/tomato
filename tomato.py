@@ -54,7 +54,7 @@ def do_automation():
     browser.switch_to.window(browser.window_handles[0])
     browser.implicitly_wait(5)
     browser.find_element_by_css_selector("a[href='#refresh']:not(.btn)").click()
-    sleep(2)
+    sleep(5)
     browser.find_element_by_css_selector("#schranka tr[data-href='2'].hidden-xs").click() # opens 2nd email received, subscription confirmation
     browser.implicitly_wait(5)
 
@@ -70,7 +70,7 @@ def do_automation():
     print("\tInjecting MEFormFiller javascript")
     browser.execute_script(open("./MEFormFiller.user.js").read())
     browser.implicitly_wait(5)
-    sleep(2)
+    sleep(5)
     iframe2 = browser.find_element_by_css_selector('iframe#MarketingMicrositeIfr')
     browser.switch_to_frame(iframe2)
     browser.find_element_by_css_selector("button[name='ME_TabbedScreenFlow7_pyWorkPage_15']").click()
@@ -83,7 +83,7 @@ def do_automation():
 
     # back to email to claim QR code
     browser.switch_to_default_content()
-    sleep(1)
+    sleep(5)
     browser.find_element_by_css_selector("span.glyphicon-share-alt").click()
     browser.implicitly_wait(5)
     browser.find_element_by_css_selector("#schranka tr[data-href='3'].hidden-xs").click() # opens 3rd email received, gift receipt
